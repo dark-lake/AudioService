@@ -108,7 +108,7 @@ def pack_record(role: str, content: str):
     return {"role": role, "content": content}
 
 
-async def ask_model(prompt: list):
+async def ask_model(prompt: list, lang_type='zh'):
     """
     实际的返回转音频的字符串, 主要目的就是调整转音频字符串的长度
     """
@@ -121,7 +121,10 @@ async def ask_model(prompt: list):
     count = 0  # 记录这次回答一共走了生成了多少次回答
     async for response in invoke_zhipu_model(prompt):
         event_status = response.event
-        response_data = response.data.replace("\n", "").replace("\t", "").replace(" ", "")
+        if lang_type == 'en':
+            response_data = response.data.replace("\n", "").replace("\t", "")
+        else:
+            response_data = response.data.replace("\n", "").replace("\t", "").replace(" ", "")
         total_length += len(response_data)
         count += 1
         if event_status == "add":
