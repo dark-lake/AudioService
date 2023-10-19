@@ -155,13 +155,14 @@ async def ask_model(prompt: list, lang_type='zh'):
             break
 
 
-async def send_audio_data(audio_path, text_response, history, status):
+async def send_audio_data(audio_path, text_response, history, status, delete=True):
     async with aiofiles.open(audio_path, 'rb') as f:
         temp_data = await f.read()
 
     # todo 这里将该音频文件删除一下
     try:
-        os.remove(audio_path)
+        if delete:
+            os.remove(audio_path)
     except Exception:
         pass
 

@@ -8,7 +8,7 @@ CUID = 'chronic_disease'
 # 采样率 固定不变
 RATE = 16000
 
-# 模型的版本设置, 申请的接口 scope可以去具体的查,这里就不用动了
+# 模型的版本设置, 申请的接口 scope可以去具体查,这里就不用动了
 DEV_PID = 1537  # 1537 表示识别普通话，使用输入法模型。根据文档填写PID，选择语言及识别模型,
 ENG_PID = 1737  # 英文模型
 ASR_URL = 'http://vop.baidu.com/server_api'
@@ -42,7 +42,7 @@ TTS_URL = 'http://tsn.baidu.com/text2audio'
 url = 'https://Sdia-LLM-KG-qm1yr71e2p69.serv-c1.openbayes.net'  # 替换成你的URL
 
 # 音频文件保存路径
-audio_save_path = r''
+audio_save_path = "zhipu_api"
 
 # 科大讯飞
 APPID = "3ba265fd"
@@ -65,4 +65,8 @@ redis_config = {
     'db': 0,
     'password': 'Sigsit123',
     'max_connections': 30
+}
+# fixed recovery
+fixed_recovery = {
+
 }

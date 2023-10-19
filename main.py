@@ -2,7 +2,7 @@ from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi.responses import StreamingResponse
-
+from FixedRecovery import fixed_audio
 from funcs import *
 
 zhipuai.api_key = zhipuai_config.get("ZHIPU_API_KEY")
@@ -53,9 +53,21 @@ async def zhipu_api(websocket: WebSocket, session_id: str):
         print(response)
         try:
             text = response.get("result")[0]
-        except Exception:
-            text_data = await send_text_data("音频质量太差", [], 207)
-            await websocket.send_json(text_data)
+        except Exception as e:
+            poor_quality = fixed_audio["exception"]["poor_quality"]
+            temp_data = await send_audio_data(poor_quality.get("audio_path"), poor_quality.get("audio_text"), [], 207, delete=False)
+            await websocket.send_json(temp_data)
+            end_packet = send_text_data("_end_", [], 300)
+            await websocket.send_json(end_packet)
+            continue
+
+        if len(text.strip()) == 0:
+            print("文本内容长度为0")
+            repeat = fixed_audio["exception"]["repeat"]
+            temp_data = await send_audio_data(repeat.get("audio_path"), repeat.get("audio_text"), [], 208, delete=False)
+            await websocket.send_json(temp_data)
+            end_packet = send_text_data("_end_", [], 300)
+            await websocket.send_json(end_packet)
             continue
         text_data = send_text_data(text, [], 203)
 
@@ -69,7 +81,7 @@ async def zhipu_api(websocket: WebSocket, session_id: str):
         # todo 处理英文回答的情况
         if user_lang_type in ['zh', 'en']:
             if user_lang_type != 'zh':
-                text = text + ", 请用英文回答"
+                text = text + ", 请用英文回答, 回答中不能出现任何中文内容"
         else:
             data = await send_text_data("只能处理中文(zh)以及英文(en), 请检查输入lang_type类型是否存在", [], 208)
             await websocket.send_json(data)

@@ -1,3 +1,4 @@
+import asyncio
 import json
 import os
 from urllib.request import urlopen
@@ -133,5 +134,6 @@ async def text2audio(text, save_path, file_name):
 
 
 if __name__ == '__main__':
-    result = text2audio("hello my name is fengtao", "zhipu_api/", "result1")
-    print(result)
+    asyncio.run(text2audio("您可以再说一遍吗?", "zhipu_api/", "repeat"))
+    # result = text2audio("hello my name is fengtao", "zhipu_api/", "result1")
+    # print(result)
