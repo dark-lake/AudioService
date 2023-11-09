@@ -84,6 +84,39 @@ async def invoke_zhipu_model_curr(prompt: list):
             break
 
 
+def invoke_zhipu_model_tb(prompt: list):
+    """
+    调用zhipu的同步版本
+    :param prompt:
+    :return:
+    """
+    try:
+        """
+            {"role": "user", "content": "你好"},
+            {"role": "assistant", "content": "我是人工智能助手"},
+            {"role": "user", "content": "你叫什么名字"},
+            {"role": "assistant", "content": "我叫chatGLM"},
+            {"role": "user", "content": "你都可以做些什么事"},
+        """
+        response = zhipuai.model_api.invoke(
+            model=zhipuai_config.get("MODEL_TYPE"),
+            prompt=prompt
+        )
+        code = response['code']
+        if code != 200:
+            print(response['msg'])
+            return send_text_data('请求异常', [], code)
+        else:
+            assistant_data = response.get('data').get('choices')[0]
+            prompt.append(assistant_data)
+            text = assistant_data.get('content')
+            return send_text_data(text, prompt, 200)
+    except Exception as e:
+        print(f'请求失败')
+        print(e)
+        return send_text_data('服务器异常', [], 500)
+
+
 def structure_prompt(text: str, user_history: list):
     """
     负责建立提问大模型的prompt
@@ -233,3 +266,7 @@ def structure_record(account: str, session_id: str, role: str, text_data: list, 
         "audio_format": audio_format,
         "time": time
     }
+
+
+if __name__ == '__main__':
+    pass

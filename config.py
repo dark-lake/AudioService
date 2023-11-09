@@ -52,7 +52,7 @@ APIKey = "bc7f337419878c954ca248d2de8fa6da"
 # zhipu api key
 zhipuai_config = {
     'ZHIPU_API_KEY': 'fe559d96a17366af7b891b6f0890abb3.j0oDGLMnttt7R824',
-    'MODEL_TYPE': 'chatglm_pro',
+    'MODEL_TYPE': 'chatglm_turbo',
     'TEMPERATURE': 0.95,
     'TOP_P': 0.7,
     'INCREMENTAL': True

@@ -98,7 +98,6 @@ async def zhipu_api(websocket: WebSocket, session_id: str):
                 count = to_audio_str["count"]
                 # over = to_audio_str["over"]  # 用于判断是否回答完毕了
                 print(f'大模型回答:|{text}| length: {total_length}| count: {count}')
-
                 # todo 将文字转为语音发送出去
                 save_path = await text2audio(text, "zhipu_api/", "result" + str(count))
                 data = await send_audio_data(save_path, text, [], 200)
@@ -148,6 +147,16 @@ async def zhipu_text(item: ZhipuPrompt):
     # todo 构造prompt
     prompt = structure_prompt(item.question, item.history)
     return StreamingResponse(invoke_zhipu_model_curr(prompt))
+
+
+@app.post("/zhipu_text_tb")
+async def zhipu_text_tb(item: ZhipuPrompt):
+    print(item.question)
+    print(item.history)
+
+    prompt = structure_prompt(item.question, item.history)
+    return invoke_zhipu_model_tb(prompt)
+
 
 
 if __name__ == '__main__':
